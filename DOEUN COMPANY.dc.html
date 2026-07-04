@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="./image-slot.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff; color: #14141a;
+         -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: break-word;
+         --accent: #5460E1; --ink: #14141a; --muted: #8a8a95; --soft: #9a9aa4; --line: #ededf1; }
+  a { color: inherit; text-decoration: none; }
+  @keyframes doeunFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes doeunPopIn { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes doeunRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  /* ---- layout ---- */
+  .dc-shell { max-width: 1680px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: flex-start; padding: 0 clamp(20px, 4vw, 64px); }
+  .dc-aside { position: sticky; top: 0; align-self: flex-start; flex: 0 0 340px; width: 340px; max-width: 100%; padding: 52px 40px 52px 0; display: flex; flex-direction: column; gap: 30px; }
+  .dc-main { flex: 1 1 600px; min-width: 0; padding: 52px 0 96px; }
+
+  /* ---- sidebar ---- */
+  .dc-logo { display: block; width: 216px; max-width: 100%; }
+  .dc-logo img { width: 100%; height: auto; display: block; }
+  .dc-tagline { margin: 0; font-size: 19px; font-weight: 700; line-height: 1.45; letter-spacing: -0.4px; }
+  .dc-nav { display: flex; flex-direction: column; gap: 13px; }
+  .dc-nav a { width: fit-content; font-size: 26px; font-weight: 800; letter-spacing: -0.6px; line-height: 1.15; transition: color 0.18s ease, transform 0.18s ease; }
+  .dc-nav a:hover { color: var(--accent); transform: translateX(6px); }
+  .dc-side-info { margin: 0; max-width: 254px; line-height: 1.5; }
+  .dc-side-info .t { display: block; font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; }
+  .dc-side-info .d { display: block; margin-top: 6px; font-size: 15px; line-height: 1.6; color: #6b6b76; }
+  .dc-contact { display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: #6b6b76; line-height: 1.5; }
+  .dc-contact b { color: var(--ink); font-weight: 600; }
+  .dc-social { display: flex; gap: 10px; }
+  .dc-social a { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #e3e3ea; border-radius: 50%; color: var(--ink); font-weight: 800; font-size: 13px; transition: all 0.18s ease; }
+  .dc-social a:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); }
+
+  /* ---- hero ---- */
+  .dc-hero { padding: 10px 0 60px; border-bottom: 2px solid var(--ink); animation: doeunRise 0.6s ease both; }
+  .dc-eyebrow { font-size: 14px; font-weight: 800; letter-spacing: 3px; color: var(--accent); }
+  .dc-hero h1 { margin: 20px 0 0; font-size: clamp(42px, 6.2vw, 84px); font-weight: 800; letter-spacing: -2.8px; line-height: 0.98; }
+  .dc-formula { margin: 28px 0 0; font-size: clamp(17px, 1.8vw, 22px); font-weight: 800; letter-spacing: -0.3px; line-height: 1.9; }
+  .dc-hl-blue { background: #E9EDFF; padding: 2px 9px; border-radius: 4px; white-space: nowrap; }
+  .dc-hl-pink { background: #FFE9F2; padding: 2px 9px; border-radius: 4px; white-space: nowrap; }
+  .dc-lead { margin: 18px 0 0; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.7; color: #44444e; max-width: 720px; }
+  .dc-badges { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .dc-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 100px; padding: 9px 17px; }
+  .dc-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .dc-badge.win { background: var(--ink); color: #fff; }
+  .dc-badge.win .dot { background: #fff; }
+
+  /* ---- part dividers (On Screen / In Class) ---- */
+  .dc-part { margin-top: 88px; padding-top: 26px; border-top: 3px solid var(--ink); scroll-margin-top: 24px; }
+  .dc-part-index { font-size: 13.5px; font-weight: 800; letter-spacing: 3px; color: var(--soft); }
+  .dc-part-title { margin: 14px 0 0; font-size: clamp(26px, 3vw, 38px); font-weight: 800; letter-spacing: -1.2px; line-height: 1.3; }
+  .dc-part-lead { margin: 16px 0 0; font-size: clamp(16px, 1.5vw, 19px); line-height: 1.78; color: #44444e; max-width: 780px; }
+  .dc-part-meta { margin: 20px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .dc-chip { font-size: 14px; font-weight: 700; color: #5a5a66; background: #f5f5f8; border-radius: 100px; padding: 8px 15px; }
+
+  /* ---- sections ---- */
+  .dc-section { padding: 64px 0 0; scroll-margin-top: 24px; }
+  .dc-sec-head { display: flex; align-items: baseline; gap: 14px; padding-bottom: 18px; border-bottom: 2px solid var(--ink); margin-bottom: 10px; }
+  .dc-sec-num { font-size: 14.5px; font-weight: 800; letter-spacing: 1px; color: var(--accent); }
+  .dc-sec-head h2 { margin: 0; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -1px; }
+  .dc-sec-sub { font-size: 15px; color: var(--soft); font-weight: 600; }
+
+  /* ---- news ---- */
+  .dc-news-row { display: flex; align-items: center; gap: 22px; padding: 24px 10px; border-bottom: 1px solid var(--line); border-radius: 8px 8px 0 0; transition: background 0.18s ease, padding-left 0.18s ease; }
+  .dc-news-row:hover { background: #f8f8fb; padding-left: 18px; }
+  .dc-news-outlet { flex-shrink: 0; width: 210px; font-size: 14px; font-weight: 800; letter-spacing: 0.5px; color: var(--accent); }
+  .dc-news-title { flex: 1; min-width: 0; margin: 0; font-size: clamp(17px, 1.8vw, 21px); font-weight: 600; letter-spacing: -0.4px; line-height: 1.45; }
+  .dc-news-arrow { flex-shrink: 0; font-size: 20px; color: #c4c4cc; transition: transform 0.18s ease, color 0.18s ease; }
+  .dc-news-row:hover .dc-news-arrow { color: var(--accent); transform: translate(2px, -2px); }
+
+  /* ---- works / class cards ---- */
+  .doeun-work-card { transition: transform 0.25s ease; }
+  .doeun-work-card:hover { transform: translateY(-4px); }
+  .doeun-work-thumb { transition: box-shadow 0.25s ease; }
+  .doeun-work-card:hover .doeun-work-thumb { box-shadow: 0 18px 40px -18px rgba(20,20,26,0.35); }
+  .doeun-work-thumb img { transition: transform 0.5s ease; }
+  .doeun-work-card:hover .doeun-work-thumb img { transform: scale(1.05); }
+  .doeun-class-card { transition: transform 0.25s ease; }
+  .doeun-class-card:hover { transform: translateY(-4px); }
+  .doeun-class-thumb { transition: box-shadow 0.25s ease; }
+  .doeun-class-card:hover .doeun-class-thumb { box-shadow: 0 18px 40px -18px rgba(20,20,26,0.28); }
+  .doeun-class-thumb img { transition: transform 0.5s ease; }
+  .doeun-class-card:hover .doeun-class-thumb-img { transform: scale(1.04); }
+
+  /* ---- support ---- */
+  .dc-grant-row { display: flex; align-items: center; gap: 22px; padding: 22px 6px; border-bottom: 1px solid var(--line); }
+  .dc-grant-year { flex-shrink: 0; width: 56px; font-size: clamp(19px, 2vw, 25px); font-weight: 800; letter-spacing: -0.5px; color: var(--accent); line-height: 1; }
+  .dc-grant-logo { flex-shrink: 0; width: 108px; height: 58px; display: flex; align-items: center; justify-content: center; }
+  .dc-grant-logo img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .dc-grant-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .dc-grant-body h3 { margin: 0; font-size: clamp(17px, 1.7vw, 21px); font-weight: 700; letter-spacing: -0.4px; line-height: 1.4; }
+  .dc-grant-body span { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: -0.2px; }
+  .dc-grant-tag { flex-shrink: 0; font-size: 13.5px; font-weight: 700; letter-spacing: 0.5px; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 100px; padding: 7px 14px; }
+
+  /* ---- contact CTA + footer ---- */
+  .dc-cta { margin-top: 96px; padding: clamp(36px, 4.5vw, 60px); border-radius: 18px; background: var(--ink); color: #fff; }
+  .dc-cta .dc-eyebrow { color: #aab2ff; }
+  .dc-cta h2 { margin: 16px 0 0; font-size: clamp(30px, 3.8vw, 52px); font-weight: 800; letter-spacing: -1.6px; line-height: 1.15; }
+  .dc-cta p { margin: 16px 0 0; font-size: clamp(16px, 1.4vw, 18px); line-height: 1.7; color: rgba(255,255,255,0.78); max-width: 620px; }
+  .dc-cta-actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .dc-btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; border-radius: 100px; background: var(--accent); color: #fff; font-weight: 800; font-size: 16px; letter-spacing: -0.2px; transition: transform 0.18s ease, opacity 0.18s ease; }
+  .dc-btn:hover { transform: translateY(-2px); opacity: 0.94; }
+  .dc-btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.42); }
+  .dc-footer { margin-top: 36px; padding-top: 26px; border-top: 2px solid var(--ink); display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; font-size: 14.5px; color: var(--soft); }
+
+  /* ---- responsive ---- */
+  @media (max-width: 980px) {
+    .dc-aside { position: static; flex: 1 1 100%; width: 100%; padding: 44px 0 0; gap: 22px; }
+    .dc-nav { flex-direction: row; flex-wrap: wrap; gap: 16px 28px; }
+    .dc-nav a { font-size: 20px; }
+    .dc-side-info { display: none; }
+    .dc-news-outlet { width: 118px; }
+    .dc-main { padding-top: 36px; }
+  }
+</style>
+</helmet>
+<div class="dc-shell" style="--accent: {{ accent }};">
+
+  <aside class="dc-aside">
+
+    <a href="#top" class="dc-logo">
+      <img src="assets/doeun-logo.png" alt="DO:EUN COMPANY">
+    </a>
+
+    <p class="dc-tagline">인형들이 뛰어노는<br>AI 애니메이션 &amp; 디지털예술교육 스튜디오</p>
+
+    <nav class="dc-nav">
+      <a href="#news">NEWS</a>
+      <a href="#works">WORKS</a>
+      <a href="#awards">AWARDS</a>
+      <a href="#class">CLASS</a>
+      <a href="#grants">SUPPORT</a>
+    </nav>
+
+    <p class="dc-side-info">
+      <span class="t">🎬 AI Animation &amp; Digital Arts Education</span>
+      <span class="d">공공기관 · 기업 브랜드 숏폼 · 캐릭터 애니메이션<br>학교 · 기관 AI 디지털예술교육 출강</span>
+    </p>
+
+    <div class="dc-contact">
+      <div><b>E-MAIL.</b> studiodoeun7@gmail.com</div>
+      <div><b>INSTA.</b> @doeun_company</div>
+      <div><b>BLOG.</b> blog.naver.com/roadofsmile</div>
+    </div>
+
+    <div class="dc-social">
+      <a href="https://www.instagram.com/doeun_company/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"></circle></svg>
+      </a>
+      <a href="https://blog.naver.com/roadofsmile" target="_blank" rel="noopener" aria-label="Blog">B</a>
+      <a href="mailto:studiodoeun7@gmail.com" aria-label="Email">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="M4 7l8 6 8-6"></path></svg>
+      </a>
+    </div>
+  </aside>
+
+  <main id="top" class="dc-main">
+
+    <section class="dc-hero">
+      <span class="dc-eyebrow">DO:EUN COMPANY · AI ANIMATION &amp; DIGITAL ARTS EDUCATION STUDIO</span>
+      <h1>모든 상상을<br>눈 앞에 구현합니다</h1>
+      <p class="dc-formula">Digital Storytelling&nbsp;&nbsp;=&nbsp;&nbsp;<span class="dc-hl-blue">On Screen 🎬</span>&nbsp;&nbsp;×&nbsp;&nbsp;<span class="dc-hl-pink">In Class 📚</span></p>
+      <p class="dc-lead">Art &amp; Tech의 시대에 서사를 더하는 스튜디오.<br>프롬프트를 대본 삼아 인형들이 뛰어노는 애니메이션을 스크린에 올리고,<br>교실에서는 내 생각을 이야기로, 내 이야기를 작품으로 만드는 디지털예술교육을 엽니다.</p>
+      <div class="dc-badges">
+        <span class="dc-badge win"><span class="dot"></span>New York International Film Awards 3관왕</span>
+        <span class="dc-badge"><span class="dot"></span>AI Film Awards in Cannes 공식 선정</span>
+        <span class="dc-badge"><span class="dot"></span>서울시 AI디지털배움터 공식 강사</span>
+      </div>
+    </section>
+
+    <div class="dc-part" id="onscreen">
+      <span class="dc-part-index">PART 01 · ON SCREEN</span>
+      <h2 class="dc-part-title"><span class="dc-hl-blue">On Screen</span> — 인형들이 뛰어노는 AI 애니메이션 제작사</h2>
+      <p class="dc-part-lead">극작·인형극·연출 경험을 바탕으로, 프롬프트를 대본 삼아 영상과 사운드를 구현하는 AI 애니메이션 스튜디오입니다.<br>친근하고 귀여운 인형의 감성을 살려 브랜드·정책·지역 설화·오리지널 캐릭터를 짧지만 강렬한 영상으로 만듭니다.</p>
+    </div>
+
+    <section id="news" class="dc-section">
+      <header class="dc-sec-head">
+        <span class="dc-sec-num">01</span>
+        <h2>NEWS</h2>
+        <span class="dc-sec-sub">언론 보도 &amp; 수상</span>
+      </header>
+      <div>
+        <sc-for list="{{ news }}" as="n" hint-placeholder-count="3">
+          <a href="{{ n.link }}" target="_blank" rel="noopener" class="dc-news-row">
+            <span class="dc-news-outlet">{{ n.outlet }}</span>
+            <h3 class="dc-news-title">{{ n.title }}</h3>
+            <span class="dc-news-arrow">↗</span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="works" class="dc-section">
+      <header class="dc-sec-head" style="margin-bottom: 28px;">
+        <span class="dc-sec-num">02</span>
+        <h2>WORKS</h2>
+        <span class="dc-sec-sub">{{ count }} projects · 협업 &amp; 공모전</span>
+      </header>
+      {{ worksGrid }}
+    </section>
+
+    <section id="awards" class="dc-section">
+      <header class="dc-sec-head">
+        <span class="dc-sec-num">03</span>
+        <h2>AWARDS</h2>
+        <span class="dc-sec-sub">작품 수상 &amp; 선정 · 영화제 · 공모전</span>
+      </header>
+      {{ awardsList }}
+    </section>
+
+    <sc-if value="{{ showEducation }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div class="dc-part" id="inclass">
+        <span class="dc-part-index">PART 02 · IN CLASS</span>
+        <h2 class="dc-part-title"><span class="dc-hl-pink">In Class</span> — 디지털문화예술교육계를 선구합니다</h2>
+        <p class="dc-part-lead">영상 제작과 함께 디지털문화예술교육 현장에 서 있습니다.<br>AI 디지털 창작 교육과 인형극 기반 스토리텔링 수업으로 <b>내 생각을 이야기로, 내 이야기를 작품으로</b> 만드는 경험을 설계하며,<br>서울·경기 관내 학교에 출강하고 있습니다.</p>
+        <div class="dc-part-meta">
+          <span class="dc-chip">서울시 AI디지털배움터 공식 강사</span>
+          <span class="dc-chip">(주)Toonico AI 창작 연구소 출강 강사</span>
+          <span class="dc-chip">광진구청 공인 AI 디지털 강사</span>
+          <span class="dc-chip">사잇소리디지털예술교육협회 소속</span>
+        </div>
+      </div>
+
+      <section id="class" class="dc-section">
+        <header class="dc-sec-head">
+          <span class="dc-sec-num">04</span>
+          <h2>CLASS</h2>
+          <span class="dc-sec-sub">디지털문화예술교육 · {{ classCount }} programs</span>
+        </header>
+        <p style="margin: 20px 0 14px; font-size: 15px; color: #9a9aa4; font-weight: 600;">관심 키워드를 선택하면 해당 수업만 모아 보여드려요</p>
+        {{ tagDeck }}
+        {{ classGrid }}
+      </section>
+    </div>
+    </sc-if>
+
+    <section id="grants" class="dc-section">
+      <header class="dc-sec-head">
+        <span class="dc-sec-num">05</span>
+        <h2>SUPPORT</h2>
+        <span class="dc-sec-sub">지원사업 선정 실적</span>
+      </header>
+      <div>
+        <sc-for list="{{ grants }}" as="g" hint-placeholder-count="4">
+          <div class="dc-grant-row">
+            <span class="dc-grant-year">{{ g.year }}</span>
+            <div class="dc-grant-logo">
+              <img src="{{ g.logo }}" alt="{{ g.org }}" loading="lazy">
+            </div>
+            <div class="dc-grant-body">
+              <h3>{{ g.org }}</h3>
+              <span>{{ g.program }}</span>
+            </div>
+            <span class="dc-grant-tag">선정</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section class="dc-cta">
+      <span class="dc-eyebrow">CONTACT</span>
+      <h2>함께 만들고 싶은<br>이야기가 있나요?</h2>
+      <p>홍보 애니메이션 제작부터 AI 디지털예술교육 출강까지 — 프로젝트와 수업 문의를 기다립니다.</p>
+      <div class="dc-cta-actions">
+        <a href="mailto:studiodoeun7@gmail.com" class="dc-btn">프로젝트 문의하기 →</a>
+        <a href="https://www.instagram.com/doeun_company/" target="_blank" rel="noopener" class="dc-btn dc-btn-ghost">인스타그램 보기</a>
+      </div>
+    </section>
+
+    <footer class="dc-footer">
+      <span>© DOEUN COMPANY · Director 김나영</span>
+      <span>studiodoeun7@gmail.com</span>
+    </footer>
+  </main>
+
+  {{ modalEl }}
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 1024}, &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#5460E1&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#5460E1&quot;, &quot;#111827&quot;, &quot;#E1544F&quot;, &quot;#1F8A5B&quot;], &quot;section&quot;: &quot;테마&quot;}, &quot;showEducation&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;섹션&quot;}}">
+class Component extends DCLogic {
+  state = { modalId: null, selectedTags: [] };
+
+  renderVals() {
+    const accent = this.props.accentColor || "#5460E1";
+    const showEducation = this.props.showEducation !== false;
+    const h = React.createElement;
+
+    const links = {
+      "1":  {"blog":"https://blog.naver.com/roadofsmile/224173037307","insta":"https://www.instagram.com/reel/DUAlLPxEWg-/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d8106b075c4d4bcf49d0f"},
+      "2":  {"blog":"https://blog.naver.com/roadofsmile/224200309462","insta":"","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d814b89ffddf95240d16c"},
+      "3":  {"blog":"https://blog.naver.com/roadofsmile/224254349445","insta":"https://www.instagram.com/reel/DWiUwNxhnJT/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d8137b042c9f44965a96b"},
+      "9":  {"blog":"https://blog.naver.com/roadofsmile/224233070484","insta":"https://www.instagram.com/reel/DV0MPJ0hKKB/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d8120a219f50f151aa541"},
+      "10": {"blog":"https://blog.naver.com/roadofsmile/224224806920","insta":"https://www.instagram.com/reel/DVQYXdsEcLC/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d81b78ea3cb66d9fbd1fa"},
+      "11": {"blog":"","insta":"","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d81319a7ed62d005c1566"},
+      "12": {"blog":"https://blog.naver.com/roadofsmile/224241716695","insta":"","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d81158ef2d2fb1a26d9a9"},
+      "13": {"blog":"https://blog.naver.com/roadofsmile/224254376860","insta":"","youtube":"https://www.youtube.com/shorts/cEdg96FAZP0","notion":"https://app.notion.com/p/344a6d3ca51d8199b33adc0acb3df1c9"},
+      "14": {"blog":"https://blog.naver.com/roadofsmile/224249653477","insta":"","youtube":"https://www.youtube.com/shorts/pNykXeuRmv0","notion":"https://app.notion.com/p/344a6d3ca51d816eb3addcdc9e5105cf"},
+      "16": {"blog":"https://blog.naver.com/roadofsmile/224240081331","insta":"","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d813fb5d7c51381e75b3a"},
+      "17": {"blog":"https://blog.naver.com/roadofsmile/224224850492","insta":"","youtube":"https://www.youtube.com/watch?v=Kl1OGMwI27Q","notion":"https://app.notion.com/p/344a6d3ca51d8107b877cbb77db3ee6c"},
+      "18": {"blog":"https://blog.naver.com/roadofsmile/224258015274","insta":"","youtube":"https://www.youtube.com/watch?v=remWDKgTSgk","notion":"https://app.notion.com/p/347a6d3ca51d80f099e4d96ef69d8e3f"},
+      "20": {"blog":"https://blog.naver.com/roadofsmile/224322650750","insta":"https://www.instagram.com/p/DZpMTUayaBV/","youtube":"https://youtu.be/ffLD2OC2c0w","notion":"https://app.notion.com/p/38aa6d3ca51d800f9078d3dc956d2fc4"},
+      "21": {"blog":"","insta":"","youtube":"","notion":"https://app.notion.com/p/379a6d3ca51d80969707c68b69d9da39"},
+      "24": {"blog":"https://blog.naver.com/roadofsmile/224214497598","insta":"https://www.instagram.com/p/DVKaOm3lEA2/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d815d8b59fc864db890c0"},
+      "25": {"blog":"https://blog.naver.com/roadofsmile/224200166986","insta":"","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d8187bce0fa6ba04c5c01"},
+      "26": {"blog":"https://blog.naver.com/roadofsmile/224177752025","insta":"https://www.instagram.com/p/DUhjEjSD065/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d81a2997ff1c2947345e2"},
+      "27": {"blog":"https://blog.naver.com/roadofsmile/224280000505","insta":"","youtube":"https://youtu.be/GCHh6HZ9OsE","notion":"https://app.notion.com/p/35ba6d3ca51d800e9a05e8d7a509fed0"},
+      "28": {"blog":"https://blog.naver.com/roadofsmile/224287719266","insta":"","youtube":"","notion":"https://app.notion.com/p/362a6d3ca51d806ba7f4e89608822ebe"},
+      "39": {"blog":"https://blog.naver.com/roadofsmile/224158149026","insta":"","youtube":"https://youtu.be/F6s84x_888s","notion":"https://app.notion.com/p/344a6d3ca51d81c48d54c212108ff54c"},
+      "41": {"blog":"https://blog.naver.com/roadofsmile/224158885247","insta":"","youtube":"https://www.youtube.com/watch?v=uZCx_zXeVSA","notion":"https://app.notion.com/p/344a6d3ca51d81189f59cadc6d0c8a3d"},
+      "42": {"blog":"https://blog.naver.com/roadofsmile/224172792742","insta":"","youtube":"https://youtu.be/CqwDhDqjswE","notion":"https://app.notion.com/p/344a6d3ca51d812491e9eb9121f15bff"},
+      "43": {"blog":"https://blog.naver.com/roadofsmile/224330592849","insta":"","youtube":"","notion":"https://app.notion.com/p/38ea6d3ca51d8145b0d6dae318f17093"},
+      "44": {"blog":"https://blog.naver.com/roadofsmile/224330456144","insta":"","youtube":"","notion":"https://app.notion.com/p/38ea6d3ca51d819583b9d4702b1b5e17"},
+      "45": {"blog":"https://blog.naver.com/roadofsmile/224301921477","insta":"https://www.instagram.com/p/DYywbBaxBp-/","youtube":"https://youtu.be/BQCKytEO1jI","notion":"https://app.notion.com/p/371a6d3ca51d8070bcddf254641828b6"},
+      "46": {"blog":"https://blog.naver.com/roadofsmile/224287752417","insta":"https://www.instagram.com/p/DXoFwrgDms0/","youtube":"https://www.youtube.com/shorts/e95Dok47b-Y","notion":"https://app.notion.com/p/362a6d3ca51d800a8776d035bfb65cb2"}
+    };
+
+    const meta = {
+      blog:    { label: "네이버 블로그 제작기", host: "blog.naver.com", icon: "B", bg: "#03c75a", fg: "#fff" },
+      insta:   { label: "인스타그램", host: "instagram.com", icon: "◎", bg: "#E1306C", fg: "#fff" },
+      youtube: { label: "유튜브 영상", host: "youtube.com", icon: "▶", bg: "#FF0000", fg: "#fff" },
+      notion:  { label: "프로젝트 노트", host: "notion.com", icon: "N", bg: "#14141a", fg: "#fff" }
+    };
+    const linkOrder = ["youtube", "insta", "blog"];
+    const linksFor = (n) => {
+      const row = links[String(n)] || {};
+      return linkOrder.filter(k => row[k]).map(k => ({ ...meta[k], url: row[k] }));
+    };
+
+    // title/sub keyed by original thumbnail number (1–42)
+    const titles = {
+      1:  ["5월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      2:  ["4월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      3:  ["3월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      4:  ["2월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      5:  ["1월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      6:  ["6월 트리의 세포들", "셀트리온 · 3D 헬스 시리즈"],
+      7:  ["5월 트리의 세포들", "셀트리온 · 3D 헬스 시리즈"],
+      8:  ["4월 트리의 세포들", "셀트리온 · 3D 헬스 시리즈"],
+      9:  ["3월 트리의 세포들", "셀트리온 · 3D 헬스 시리즈"],
+      10: ["2월 트리의 세포들", "셀트리온 · 3D 헬스 시리즈"],
+      11: ["1월 트리의 세포들", "셀트리온 · 3D 헬스 시리즈"],
+      12: ["천녹그로잉키즈 완밥송", "정관장 · 캠페인 송 애니메이션"],
+      13: ["베이비부머 라이트잡 · 근로자 편", "경기도일자리재단 · 정책 홍보"],
+      14: ["베이비부머 라이트잡 · 기업 편", "경기도일자리재단 · 정책 홍보"],
+      15: ["경기도형 주4.5일제 · 근로자 편", "경기도일자리재단 · 정책 홍보"],
+      16: ["경기도형 주4.5일제 · 기업 편", "경기도일자리재단 · 정책 홍보"],
+      17: ["산불 국민행동요령", "행정안전부 · 공공 캠페인"],
+      18: ["공동주택 화재 피난행동요령", "행정안전부 · 공공 캠페인"],
+      19: ["고향사랑 기부제", "행정안전부 · 공공 캠페인"],
+      20: ["구명조끼 해(海)주세요!", "해양수산부 · 안전 캠페인"],
+      21: ["민생회복 소비쿠폰", "행정안전부 · 공공 캠페인"],
+      22: ["청년마을 집단지성", "행정안전부 · 공공 캠페인"],
+      23: ["다행이의 플러스노트+", "행정안전부 · 공공 캠페인"],
+      24: ["미리내집 연계형 공공한옥", "SH공사 · 주택 정책 홍보"],
+      25: ["경기도 북토크 책동네31", "경기도 · 독서문화 캠페인"],
+      26: ["용인반도체 클러스터", "정직한 티라미수 TDY · 지역 산업"],
+      27: ["경기도 돌봄정책 아이가치 플러스", "경기도사회적경제원 · 정책 홍보"],
+      28: ["자립준비청년 청년그린편의점", "경기도사회적경제원 · 정책 홍보"],
+      29: ["우유팩 분리배출 캠페인", "도담마을사회적협동조합 · 환경"],
+      30: ["가족티 살 때는 빈스패밀리", "Beans Family · 브랜드 광고"],
+      31: ["2026 경기푸른미래관", "입사생 선발 홍보 애니메이션"],
+      32: ["감 살아있는 청도다!", "청도군 · 첫 AI 커머셜 숏폼"],
+      33: ["고향사랑 기부제", "행정안전부 · 공공 캠페인"],
+      34: ["아리와 함께 가요 Smart Farm", "농협 마스코트 ‘아리’ 뮤직비디오"],
+      35: ["Get on the E.G Tour Bus!", "경기관광 국제 AI 영상 공모전 · 입상작"],
+      36: ["경기도일자리재단 숏폼 시리즈", "주4.5일제 · 일자리포털 · 기술학교 외"],
+      37: ["Icarus on the Land", "BIAF × 대한적십자사 공모전 · 수상작"],
+      38: ["Soda Pop? : Drink your soul", "SNAC 성남시중독관리통합지원센터 · 수상작"],
+      39: ["강감찬 장군의 퇴근길", "GAGA 미디어센터관악 AI 공모전 · 수상작"],
+      40: ["새만금! 희망과 혁신의 땅", "새만금 AI 숏폼 공모전 · 수상작"],
+      41: ["있는 그대로 당신을 Dunkin'", "AI.INUS 광고 공모전 · 수상작"],
+      42: ["내 손 안의 정책 비서 혜택알리미", "행정안전부 소셜미디어기자단 · 시범제작"],
+      43: ["구명조끼 해(海)주세요! 여객선 편", "해양수산부 · 안전 캠페인"],
+      44: ["6월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      45: ["5월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"],
+      46: ["4월 셀리로그", "셀트리온 · 월간 마스코트 브이로그"]
+    };
+    // WORKS — Notion '대표 프로젝트' 게시 순서(최신순). 정렬 키 = 블로그 게시번호(logNo, 날짜와 단조 증가).
+    //  게시일 미입력 + 쿼리 API(Business 전용) 제약으로, logNo가 확인된 항목은 정확히, 미확인 항목
+    //  (6·15·22·33·37·38 등 일부)은 시리즈/연도 맥락으로 근사 배치했습니다.
+    const order = [43, 44, 6, 20, 23, 21, 45, 19, 7, 46, 28, 27, 8, 18, 13, 3, 14, 12, 16, 15, 9, 17, 10, 24, 2, 25, 26, 33, 11, 1, 42, 36, 35, 29, 4, 5, 31, 30, 34, 22, 40, 41, 39, 32, 37, 38];
+    // 신규/동기화 항목 썸네일 URL/로컬 경로. 로컬 파일(assets/thumbs/N.jpg)이 없을 때 사용.
+    // 비어 있으면 로컬 경로를 시도하고, 그것도 없으면 그라데이션+제목 카드로 폴백합니다.
+    const workThumbs = {
+      "43": "https://mblogthumb-phinf.pstatic.net/MjAyNjA2MjlfOCAg/MDAxNzgyNzEwODU3NzE2.WtYivD-SVI2nzPRLAlhq88qQO8rU3tg5EGBiQ54CLXwg.hyQyqHJIJp7iEZBgfcT9xe_spcGiP2YtOHuxsYQ3y2Yg.PNG/%EB%8F%84%EC%9D%80%EC%BB%B4%ED%8D%BC%EB%8B%88_%EC%8D%B8%EB%84%A4%EC%9D%BC_(16).png?type=w800",
+      "44": "https://mblogthumb-phinf.pstatic.net/MjAyNjA2MjlfMTU0/MDAxNzgyNzAyMjA0MDkx.y8_uBlP1lG3AeoJUaNJNHy5NO1iWuwVH61dUrl-yCJkg.hZS2AjRaYxO11hYP0_zvvEvx85tuKIuOCRZuBwtaAtkg.PNG/%EB%8F%84%EC%9D%80%EC%BB%B4%ED%8D%BC%EB%8B%88_%EC%8D%B8%EB%84%A4%EC%9D%BC_(15).png?type=w800",
+      "45": "assets/thumbs/45.png",
+      "46": "assets/thumbs/46.png"
+    };
+    const projects = order.map((n) => {
+      const ls = linksFor(n);
+      return { id: n, img: workThumbs[String(n)] || ("assets/thumbs/" + n + ".jpg"), title: titles[n][0], sub: titles[n][1], links: ls, linkCount: ls.length || 0, open: () => this.setState({ modalId: n }) };
+    });
+
+    // WORKS 갤러리 — createElement로 렌더해 로컬/URL 썸네일을 모두 지원하고, 로딩 실패 시
+    // 그라데이션+제목 카드로 폴백합니다. referrerPolicy=no-referrer로 네이버 핫링크 차단을 회피합니다.
+    const worksGrid = h("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(238px, 1fr))", gap: "clamp(20px, 2.2vw, 34px) clamp(16px, 1.6vw, 26px)" } },
+      projects.map((p) => h("button", { key: p.id, type: "button", onClick: p.open, className: "doeun-work-card", style: { textAlign: "left", border: "none", background: "none", padding: 0, cursor: "pointer", font: "inherit", color: "inherit", display: "flex", flexDirection: "column", gap: "13px" } },
+        h("div", { className: "doeun-work-thumb", style: { position: "relative", aspectRatio: "1 / 1", overflow: "hidden", borderRadius: "6px", background: "linear-gradient(150deg, " + accent + ", #14141a)" } },
+          h("div", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", textAlign: "center", color: "rgba(255,255,255,0.92)", fontSize: "14.5px", fontWeight: 700, lineHeight: 1.4, letterSpacing: "-0.3px" } }, p.title),
+          h("img", { src: p.img, alt: p.title, loading: "lazy", referrerPolicy: "no-referrer", style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }, onError: (e) => { e.currentTarget.style.display = "none"; } })
+        ),
+        h("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } },
+          h("h3", { style: { margin: 0, fontSize: "17px", fontWeight: 700, letterSpacing: "-0.4px", lineHeight: 1.35 } }, p.title),
+          h("p", { style: { margin: 0, fontSize: "14.5px", color: "#8a8a95", lineHeight: 1.45 } }, p.sub)
+        )
+      ))
+    );
+
+    // Modal rendered via createElement so it only exists when open (no literal-hole img on first paint)
+    let modalEl = null;
+    if (this.state.modalId !== null) {
+      const p = projects.find(x => x.id === this.state.modalId);
+      const ls = p.links.length ? p.links : [{ ...meta.blog, url: "https://blog.naver.com/roadofsmile" }];
+      const close = () => this.setState({ modalId: null });
+      modalEl = h("div", { onClick: close, style: { position: "fixed", inset: 0, zIndex: 80, background: "rgba(20,20,26,0.5)", backdropFilter: "blur(3px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", animation: "doeunFadeIn 0.2s ease" } },
+        h("div", { onClick: (e) => e.stopPropagation(), style: { width: "100%", maxWidth: "520px", maxHeight: "88vh", overflowY: "auto", background: "#fff", borderRadius: "12px", boxShadow: "0 40px 90px -30px rgba(0,0,0,0.5)", animation: "doeunPopIn 0.26s cubic-bezier(0.16,1,0.3,1)" } },
+          h("div", { style: { position: "relative" } },
+            h("img", { src: p.img, alt: p.title, referrerPolicy: "no-referrer", style: { width: "100%", aspectRatio: "1 / 1", objectFit: "cover", display: "block", borderRadius: "12px 12px 0 0" } }),
+            h("button", { type: "button", onClick: close, "aria-label": "닫기", style: { position: "absolute", top: "14px", right: "14px", width: "36px", height: "36px", border: "none", borderRadius: "50%", background: "rgba(20,20,26,0.55)", color: "#fff", fontSize: "18px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" } }, "✕")
+          ),
+          h("div", { style: { padding: "26px 28px 30px" } },
+            h("span", { style: { fontSize: "14px", fontWeight: 700, letterSpacing: "0.5px", color: accent } }, p.sub),
+            h("h3", { style: { margin: "8px 0 4px", fontSize: "22px", fontWeight: 800, letterSpacing: "-0.6px", lineHeight: 1.3 } }, p.title),
+            h("p", { style: { margin: "0 0 20px", fontSize: "14px", color: "#9a9aa4", fontWeight: 600 } }, "관련 게시물 " + ls.length + "건"),
+            h("div", { style: { display: "flex", flexDirection: "column", gap: "10px" } },
+              ls.map((l, i) => h("a", { key: i, href: l.url, target: "_blank", rel: "noopener", style: { display: "flex", alignItems: "center", gap: "14px", padding: "14px 16px", border: "1.5px solid #ededf1", borderRadius: "10px" } },
+                h("span", { style: { flexShrink: 0, width: "38px", height: "38px", borderRadius: "9px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "17px", background: l.bg, color: l.fg, fontWeight: 800 } }, l.icon),
+                h("span", { style: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "2px" } },
+                  h("span", { style: { fontSize: "16px", fontWeight: 700, letterSpacing: "-0.3px" } }, l.label),
+                  h("span", { style: { fontSize: "13px", color: "#9a9aa4" } }, l.host)
+                ),
+                h("span", { style: { flexShrink: 0, fontSize: "18px", color: "#c4c4cc" } }, "↗")
+              ))
+            )
+          )
+        )
+      );
+    }
+
+    const grants = [
+      { year: "2026", org: "경기테크노파크 청년큐브", program: "입주기업 선정", logo: "assets/logos/gtp.png" },
+      { year: "2025", org: "한국콘텐츠진흥원 뉴콘텐츠기업지원센터", program: "멤버십기업 선정", logo: "assets/logos/kocca.png" },
+      { year: "2025", org: "SPP 국제콘텐츠마켓", program: "진출기업 선정", logo: "assets/logos/sba.png" },
+      { year: "2025", org: "성남문화재단", program: "청년예술활동지원 선정", logo: "assets/logos/scf.png" }
+    ];
+
+    // AWARDS — Notion 'Kim Na Yeong' 프로필의 '작품 수상 및 선정' 기준 (연도별)
+    const awardsData = [
+      { year: "2026", works: [
+        { title: "AI 뮤지컬 애니메이션 〈아기장수 우투리 : Re-Bloom〉", lines: [
+          { org: "New York International Film Awards", tag: "Winner", note: "Best AI Film · Best Musical Film · Best 1st Time Director" },
+          { org: "AI Film Awards in Cannes", tag: "Official Selection" },
+          { org: "KACF 2nd Korea AI Film Festival", tag: "Official Selection" },
+          { org: "CKAIFF Chungkang International AI Genre Film Festival", tag: "Official Selection" },
+          { org: "AFRICA AI CREATIVITY WEEK & AWARDS in Morocco", tag: "Finalist" },
+          { org: "Veterans Media Showcase in Florida", tag: "Honorable Mention" }
+        ] },
+        { title: "AI 애니메이션 뮤직비디오 〈Baekje: The Thousand-Year Bloom〉", lines: [
+          { org: "Seoul International AI Film Festival", tag: "Official Selection" },
+          { org: "AI FilmFest Serbia", tag: "Official Selection" }
+        ] },
+        { title: "지역설화 AI 애니메이션 뮤직비디오 〈Dada Suwon 多多水原〉 · 총괄 PD", lines: [
+          { org: "2026 수원문화재단 수원미디어센터 지역미디어사업", tag: "선정", note: "제작 중" }
+        ] },
+        { title: "AI 애니메이션 뮤직비디오 〈Get on the EG Tour Bus!〉", lines: [
+          { org: "경기관광 국제 AI 영상 공모전 · 해외 경기관광 부문", tag: "수상" }
+        ] }
+      ] },
+      { year: "2025", works: [
+        { title: "AI 애니메이션 〈Icarus on the Land〉", lines: [
+          { org: "BIAF 부천국제애니메이션페스티벌 × 제6회 재난복원력 애니메이션 공모전", tag: "수상" },
+          { org: "2025 부천국제애니메이션페스티벌 기간 작품 상영", tag: "상영" },
+          { org: "AI 영상 전문 스트리밍 사이트 OvAI", tag: "초청" }
+        ] },
+        { title: "AI 애니메이션 CF 〈있는 그대로 당신을, Dunkin'〉", lines: [
+          { org: "AI.INUS 광고 공모전 · 영상 부문", tag: "수상" }
+        ] },
+        { title: "스톱모션 애니메이션 〈HELLEBORUS〉 · 기획 PD", lines: [
+          { org: "2025 BIAF 부천국제애니메이션페스티벌 단편제작지원작", tag: "선정" }
+        ] },
+        { title: "AI 애니메이션 뮤직비디오 〈강감찬 장군의 퇴근길〉", lines: [
+          { org: "GAGA 관악문화재단 & 미디어센터관악 생성형 AI 공모전 · 영상 부문", tag: "수상" },
+          { org: "서울대학교 전시 〈AI Insight〉 작품 상영", tag: "상영" }
+        ] },
+        { title: "AI 애니메이션 뮤직비디오 〈희망과 혁신의 땅, 새만금!〉", lines: [
+          { org: "새만금개발청 'AI로 그리는 새만금의 매력' 공모전 & 국민심사", tag: "수상" }
+        ] },
+        { title: "AI 숏폼 애니메이션 〈Soda Pop?: 당신의 영혼을 마시는 불법 약물〉", lines: [
+          { org: "SNAC 성남중독관리통합지원센터 'AI 활용 중독예방콘텐츠' 공모전", tag: "수상" }
+        ] },
+        { title: "스톱모션 애니메이션 〈Dessert War〉 · 작가·기획 PD", lines: [
+          { org: "2025 한국콘텐츠진흥원 뉴콘텐츠기업지원센터 멤버십기업 프로젝트 IP", tag: "선정" },
+          { org: "2025 성남문화재단 청년예술활동지원", tag: "선정" },
+          { org: "2025 SPP 국제콘텐츠마켓", tag: "진출" }
+        ] }
+      ] }
+    ];
+    const awardWin = (t) => t === "Winner" || t === "수상";
+    const awardBadge = (t) => awardWin(t)
+      ? { flexShrink: 0, fontSize: "13px", fontWeight: 700, letterSpacing: "0.3px", color: "#fff", background: accent, borderRadius: "100px", padding: "6px 13px", whiteSpace: "nowrap" }
+      : { flexShrink: 0, fontSize: "13px", fontWeight: 700, letterSpacing: "0.3px", color: "#5a5a66", background: "#fff", border: "1.5px solid #dcdce4", borderRadius: "100px", padding: "5px 12px", whiteSpace: "nowrap" };
+    const awardLineEl = (l, i) => h("div", { key: i, style: { display: "flex", alignItems: "center", gap: "14px", padding: "11px 0", borderTop: i === 0 ? "none" : "1px solid #f1f1f4" } },
+      h("div", { style: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "3px" } },
+        h("span", { style: { fontSize: "15.5px", fontWeight: 600, letterSpacing: "-0.3px", lineHeight: 1.4 } }, l.org),
+        l.note ? h("span", { style: { fontSize: "14px", color: "#9a9aa4", fontWeight: 600, lineHeight: 1.45 } }, l.note) : null
+      ),
+      l.tag ? h("span", { style: awardBadge(l.tag) }, l.tag) : null
+    );
+    const awardWorkEl = (w, i) => h("div", { key: i, style: { padding: "20px 22px 12px", border: "1.5px solid #ededf1", borderRadius: "12px", background: "#fff" } },
+      h("h3", { style: { margin: "0 0 4px", fontSize: "17.5px", fontWeight: 800, letterSpacing: "-0.5px", lineHeight: 1.4 } }, w.title),
+      h("div", null, w.lines.map((l, j) => awardLineEl(l, j)))
+    );
+    const awardsList = h("div", { style: { display: "flex", flexDirection: "column", gap: "26px" } },
+      awardsData.map((grp, gi) => h("div", { key: gi },
+        h("div", { style: { display: "flex", alignItems: "baseline", gap: "12px", margin: "16px 0 14px" } },
+          h("span", { style: { fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 800, letterSpacing: "-1px", color: accent } }, grp.year),
+          h("span", { style: { fontSize: "14px", color: "#9a9aa4", fontWeight: 600 } }, grp.works.length + " works")
+        ),
+        h("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "16px" } },
+          grp.works.map((w, wi) => awardWorkEl(w, wi))
+        )
+      ))
+    );
+
+    // CLASS — 블로그 썸네일 URL을 여기 한 곳에 채우면 갤러리에 자동 반영됩니다.
+    //  · key = 블로그 글 번호(링크 끝 숫자) / value = 썸네일 이미지 URL
+    //  · 비워두면 태그 색 그라데이션 + 제목 카드로 표시됩니다.
+    //  · 네이버 이미지가 핫링크 차단(referer)으로 깨질 경우 assets/class-thumbs/<번호>.jpg 처럼
+    //    파일로 받아 로컬 경로를 넣어주세요.
+    const classThumbs = {
+      "224173094465": "https://mblogthumb-phinf.pstatic.net/MjAyNjAyMDVfMjQ0/MDAxNzcwMjg4NDgxNzg5.KCKuwn2HYYQrLABcGTVGqLl26j8LMLQ6CLmsXt9EOI8g._IpvmcwtNuXU__X21XthJ_vfWh1H6eJrJBnVQe5hKbEg.PNG/1.png?type=w400",
+      "224173136215": "https://mblogthumb-phinf.pstatic.net/MjAyNjAyMDVfMjIy/MDAxNzcwMjkyNjQ0NTA1.DkXxuITdcz0L9mqQPA_g3DA1XpVaq2JZbO5B_Julat4g.O-0SCzNMD-7hclf8xSNWykEHBNBsAX7aSdU5LdKMwK8g.PNG/%EC%9D%B4%EB%AF%B8%EC%A7%80_%272025_%EB%AC%B8%ED%99%94%EC%98%88%EC%88%A0%EA%B5%90%EC%9C%A1_AI_%ED%95%B4%EC%BB%A4%ED%86%A4%27_%ED%8F%AC%EC%8A%A4%ED%84%B0.png?type=w400",
+      "224172967278": "https://mblogthumb-phinf.pstatic.net/MjAyNjAyMDVfODAg/MDAxNzcwMjgxMTE5MTc4.s6Jho_Cc8Ayf-KlkFizpwY49pYLAf-VD4lPzvkvcBPkg.uAcbQ3wY_GanB40JYhPtVFHRu6mNgS76Gr58QVFyja0g.PNG/1.png?type=w800",
+      "224315944510": "https://blogthumb.pstatic.net/MjAyNjA2MTVfMTg0/MDAxNzgxNDU2NjUyOTA4.3fG3A0iTBYUtsjsoRCgVnnfCq0wziieQKwfOip--Kg0g.BxkfseM-luKhROvR24YUWJmdj_MnLf1Sksb_e0l4oXcg.PNG/1.png?type=w1",
+      "224249690766": "https://blogthumb.pstatic.net/MjAyNjA0MTJfMjk4/MDAxNzc1OTc4MDY5Mjcz.hISf9BblVNNW_Sx-2V4a7Rhb2mZ425AYHxXS9nchXUsg.RnHh1t0JBkdyxnPhChSop4nVQbAwmf0IB3sIAwPNxWMg.PNG/1.png?type=w1",
+      "224240130842": "https://blogthumb.pstatic.net/MjAyNjA0MDRfMjcg/MDAxNzc1MjI4ODUyMTI4.fFQr9YcNLohV-hZf1NUjfQd88suU7xvLTJ1V9dtKZe4g.EMUWXi2kOTiG0rVjdPjtbtBsKIZtEH9ZCK4b-e7JZpAg.PNG/900%A3%DF1%A3%DF20260403%A3%DF175918%A3%DF0000.png?type=w1",
+      "224256904047": "https://blogthumb.pstatic.net/MjAyNjA0MThfMTQz/MDAxNzc2NTAxMTIzNDkx.6Ltzrrn5SrgnC6SUvaCSGtsNvVk_38sRu2s68Uqy6Kkg.RH2oYkDlPnVdqo5dWHn7jGCl5PY_nI91Uy7ziFb8JR0g.PNG/900_1_20260418_172447_0000.png?type=w1",
+      "224281534381": "https://blogthumb.pstatic.net/MjAyNjA1MTFfMTE3/MDAxNzc4NDY1NDk5ODI3.lmkBBMb3xexr2PcZYq9EV8as-TW3RSHio0d6S2PwzUog.Gc3OnV9j57JiSernQ2_65bQBwQVf2VJGmlEOO5x6qMIg.PNG/AI_Travel_Guide_Workshop_%282%29_1.png?type=w1",
+      "224265796519": "https://blogthumb.pstatic.net/MjAyNjA0MjZfMjEw/MDAxNzc3MTk2NjcxNzk3.wZbL9uEGbyAy97GIYfG-iV9aR40MJPDed7bJAoMxoEMg.a5fSyPOg-epNwGn49amoGhRxfadewsXBX4qDUZDiqd0g.PNG/1.png?type=w1",
+      "224257806625": "https://blogthumb.pstatic.net/MjAyNjA0MThfMjk2/MDAxNzc2NTAzMzkxNzI1.-62jTfQJlyLOo0Nr_SOdJa0w3fwHvwk1DUWGh3Wa3NYg.uYkjJl_CeZk-UBITQdTe7F2MqXqj80i59Vt6rvfeLFwg.PNG/900_1_20260418_175006_0000.png?type=w1"
+    };
+    const thumbFor = (link) => classThumbs[String(link).split("/").pop()] || "";
+
+    // CLASS — entries with real Notion Tags + blog links
+    const classRaw = [
+      { title: "AI 작가와 함께 다시 쓰는 〈아기장수 우투리〉 — 지역설화 인형극 만들기", tags: ["AI", "Puppet Theater", "Storytelling"], link: "https://blog.naver.com/roadofsmile/224173094465" },
+      { title: "“막막한 대본부터 캐릭터까지” 인형극 예술교육, AI로 날개를 달다 (ARTE 해커톤 연구노트)", tags: ["AI", "Puppet Theater"], link: "https://blog.naver.com/roadofsmile/224173136215" },
+      { title: "우리 아이가 동화 속 주인공이 된다고? — AI 활용 숏폼 동화 창작 수업", tags: ["AI", "Storytelling"], link: "https://blog.naver.com/roadofsmile/224172967278" },
+      { title: "중랑이음학교 디지털드로잉 탐정단 (with 사잇소리디지털예술교육협회)", tags: ["Storytelling"], link: "https://blog.naver.com/roadofsmile/224315944510" },
+      { title: "미리캔버스 AI로 멋지게 만드는 동아리 홍보 포스터 제작 특강", tags: ["MiriCanvas", "AI"], link: "https://blog.naver.com/roadofsmile/224249690766" },
+      { title: "초등학생도 쉽게! 나만의 디지털 명함 만들기 특강", tags: ["MiriCanvas"], link: "https://blog.naver.com/roadofsmile/224240130842" },
+      { title: "AI와 함께하는 자기소개 PPT 만들기", tags: ["MiriCanvas", "AI"], link: "https://blog.naver.com/roadofsmile/224256904047" },
+      { title: "AI 에듀테크 마스터! 먼나라 이웃나라 소개하는 발표 자료 만들기", tags: ["Canva", "Gemini", "AI"], link: "https://blog.naver.com/roadofsmile/224281534381" },
+      { title: "나만의 세계여행 계획표 만들기 — 캔바 템플릿 응용 디자인", tags: ["Canva"], link: "https://blog.naver.com/roadofsmile/224265796519" },
+      { title: "2056년의 내가 편지를 보낸다면? AI로 미래의 내가 보내는 편지 만들기", tags: ["Canva", "AI"], link: "https://blog.naver.com/roadofsmile/224257806625" }
+    ];
+    const classList = classRaw.map(c => ({ ...c, thumb: thumbFor(c.link) }));
+    // Notion Tag options (board view groups by these)
+    const tagMeta = [
+      { key: "AI", label: "AI" },
+      { key: "Puppet Theater", label: "Puppet" },
+      { key: "Storytelling", label: "Storytelling" },
+      { key: "MiriCanvas", label: "Miricanvas" },
+      { key: "Canva", label: "Canva" },
+      { key: "Gemini", label: "Gemini" }
+    ];
+    const labelOf = (k) => (tagMeta.find(m => m.key === k) || { label: k }).label;
+    const sel = this.state.selectedTags || [];
+    const allActive = sel.length === 0;
+    const toggleTag = (key) => { const s = this.state.selectedTags || []; this.setState({ selectedTags: s.includes(key) ? s.filter(x => x !== key) : [...s, key] }); };
+    const clearTags = () => this.setState({ selectedTags: [] });
+    // Filter chips are an interactive control → render reactively via createElement
+    const chipBaseObj = { display: "inline-flex", alignItems: "center", gap: "7px", padding: "11px 18px", borderRadius: "100px", fontSize: "15px", fontWeight: 700, letterSpacing: "-0.3px", cursor: "pointer", fontFamily: "inherit", transition: "all .15s ease" };
+    const onObj = Object.assign({}, chipBaseObj, { background: accent, color: "#fff", border: "1.5px solid " + accent });
+    const offObj = Object.assign({}, chipBaseObj, { background: "#fff", color: "#14141a", border: "1.5px solid #e3e3ea" });
+    const chip = (key, label, active, onClick, count) => h("button", { key: key, type: "button", onClick: onClick, style: active ? onObj : offObj },
+      label,
+      count != null ? h("span", { style: { opacity: 0.6, fontWeight: 600 } }, count) : null
+    );
+    const tagDeck = h("div", { style: { display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "16px" } },
+      chip("__all", "전체", allActive, clearTags, null),
+      tagMeta.map(t => chip(t.key, t.label, sel.includes(t.key), () => toggleTag(t.key), classList.filter(c => c.tags.includes(t.key)).length))
+    );
+    const filteredClasses = (allActive ? classList : classList.filter(c => c.tags.some(t => sel.includes(t))))
+      .map(c => ({ ...c, tagLabels: c.tags.map(labelOf).join("  ·  "), slotId: "class-" + (String(c.link).split("/").pop() || c.title) }));
+    const classCount = classList.length;
+
+    // CLASS 갤러리 — WORKS와 동일한 카드 스타일. createElement로 렌더해 썸네일 유무에 따라
+    // 이미지(있을 때) 또는 태그색 그라데이션+제목(없을 때)을 보여줍니다.
+    const tagColor = { "AI": "#E1544F", "Puppet Theater": "#7A6CF0", "Storytelling": "#1F8A5B", "MiriCanvas": "#2BB0C4", "Canva": "#00C4CC", "Gemini": "#B06A2E" };
+    const classCard = (c, i) => h("a", { key: c.slotId || i, href: c.link, target: "_blank", rel: "noopener", className: "doeun-class-card", style: { display: "flex", flexDirection: "column", gap: "13px", textDecoration: "none", color: "inherit" } },
+      h("div", { className: "doeun-class-thumb", style: { position: "relative", aspectRatio: "4 / 3", overflow: "hidden", borderRadius: "6px", background: "#ffffff", border: "1px solid #ececf1" } },
+        c.thumb
+          ? h("img", { key: "img", src: c.thumb, alt: c.title, loading: "lazy", referrerPolicy: "no-referrer", className: "doeun-class-thumb-img", style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", display: "block" }, onError: (e) => { e.currentTarget.style.display = "none"; } })
+          : h("div", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "18px", textAlign: "center", background: "linear-gradient(150deg, " + (tagColor[c.tags[0]] || accent) + ", #14141a)", color: "rgba(255,255,255,0.92)", fontSize: "15px", fontWeight: 700, lineHeight: 1.45, letterSpacing: "-0.3px" } }, c.title)
+      ),
+      h("div", { style: { display: "flex", flexDirection: "column", gap: "6px" } },
+        h("span", { style: { fontSize: "13px", fontWeight: 700, letterSpacing: "0.4px", color: accent } }, c.tagLabels),
+        h("h3", { style: { margin: 0, fontSize: "16.5px", fontWeight: 700, letterSpacing: "-0.4px", lineHeight: 1.42 } }, c.title)
+      )
+    );
+    const classGrid = h("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(258px, 1fr))", gap: "clamp(20px, 2.2vw, 32px) clamp(16px, 1.6vw, 26px)" } },
+      filteredClasses.map((c, i) => classCard(c, i))
+    );
+
+    const news = [
+      { outlet: "중앙일보", title: "김나영 감독 애니메이션 ‘아기장수 우투리’ 칸 AI 영화제 선정", link: "https://www.joongang.co.kr/article/25421719" },
+      { outlet: "중앙일보", title: "설화 뮤지컬 애니 ‘아기장수 우투리: Re-Bloom’ 뉴욕국제영화제 3관왕", link: "https://www.joongang.co.kr/article/25429660" },
+      { outlet: "New York International Film Awards", title: "VIP Interview with Na-yeong Kim, director of ‘Baby Hero Uturi: Re-Bloom’", link: "https://newyorkinternationalfilmawards.com/na-yeong-kim/" }
+    ];
+
+    return {
+      accent, showEducation, grants, awardsList, tagDeck, classGrid, classCount, news, worksGrid, count: projects.length,
+      modalEl
+    };
+  }
+}
+</script>
+</body>
+</html>
