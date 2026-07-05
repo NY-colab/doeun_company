@@ -9,6 +9,7 @@
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="icon" href="assets/doeun-mascot-logo.png">
 <script src="./image-slot.js"></script>
 <style>
   * { box-sizing: border-box; }
@@ -80,19 +81,45 @@
   .dc-news-arrow { flex-shrink: 0; font-size: 20px; color: #c4c4cc; transition: transform 0.18s ease, color 0.18s ease; }
   .dc-news-row:hover .dc-news-arrow { color: var(--accent); transform: translate(2px, -2px); }
 
-  /* ---- works / class cards ---- */
-  .doeun-work-card { transition: transform 0.25s ease; }
-  .doeun-work-card:hover { transform: translateY(-4px); }
-  .doeun-work-thumb { transition: box-shadow 0.25s ease; }
-  .doeun-work-card:hover .doeun-work-thumb { box-shadow: 0 18px 40px -18px rgba(20,20,26,0.35); }
-  .doeun-work-thumb img { transition: transform 0.5s ease; }
-  .doeun-work-card:hover .doeun-work-thumb img { transform: scale(1.05); }
-  .doeun-class-card { transition: transform 0.25s ease; }
-  .doeun-class-card:hover { transform: translateY(-4px); }
-  .doeun-class-thumb { transition: box-shadow 0.25s ease; }
-  .doeun-class-card:hover .doeun-class-thumb { box-shadow: 0 18px 40px -18px rgba(20,20,26,0.28); }
-  .doeun-class-thumb img { transition: transform 0.5s ease; }
-  .doeun-class-card:hover .doeun-class-thumb-img { transform: scale(1.04); }
+  /* ---- accordion cards ---- */
+  .doeun-accordion-list { display: flex; flex-direction: column; gap: 12px; }
+  .doeun-accordion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+  .doeun-accordion-card { overflow: hidden; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease; }
+  .doeun-accordion-card:hover { transform: translateY(-2px); border-color: #dfe0ea; box-shadow: 0 14px 34px -28px rgba(20,20,26,0.5); }
+  .doeun-accordion-card.is-open { border-color: rgba(84,96,225,0.42); box-shadow: 0 18px 44px -32px rgba(20,20,26,0.45); }
+  .doeun-accordion-toggle { width: 100%; border: none; background: transparent; padding: 14px; display: flex; align-items: center; gap: 14px; text-align: left; color: inherit; font: inherit; cursor: pointer; }
+  .doeun-tile-card .doeun-accordion-toggle { align-items: stretch; flex-direction: column; position: relative; }
+  .doeun-tile-card .doeun-toggle-icon { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.92); }
+  .doeun-accordion-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .doeun-accordion-meta { font-size: 13.5px; font-weight: 800; color: var(--accent); line-height: 1.35; }
+  .doeun-accordion-title { margin: 0; font-size: 17px; font-weight: 800; line-height: 1.42; }
+  .doeun-accordion-summary { margin: 0; font-size: 14.5px; font-weight: 600; color: var(--muted); line-height: 1.45; }
+  .doeun-toggle-icon { flex-shrink: 0; width: 34px; height: 34px; border: 1.5px solid #e3e3ea; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 800; color: var(--ink); background: #fff; }
+  .doeun-accordion-card.is-open .doeun-toggle-icon { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .doeun-accordion-panel { border-top: 1px solid var(--line); padding: 16px 18px 18px; animation: doeunRise 0.22s ease both; }
+  .doeun-panel-text { margin: 0; font-size: 14.5px; font-weight: 600; color: #686873; line-height: 1.6; }
+  .doeun-action-row { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .doeun-action-pill { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid #e3e3ea; border-radius: 100px; background: #fff; color: var(--ink); padding: 9px 14px; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+  .doeun-action-pill.is-primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .doeun-card-media { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; border-radius: 6px; background: linear-gradient(150deg, var(--accent), #14141a); display: block; }
+  .doeun-card-media.is-wide { aspect-ratio: 4 / 3; background: #fff; border: 1px solid #ececf1; }
+  .doeun-card-media.is-logo { flex: 0 0 104px; width: 104px; height: 64px; aspect-ratio: auto; background: #f8f8fb; border: 1px solid #ececf1; }
+  .doeun-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.45s ease; }
+  .doeun-class-thumb img { object-fit: contain; }
+  .doeun-card-media.is-logo img { object-fit: contain; padding: 10px; }
+  .doeun-accordion-card:hover .doeun-card-media img { transform: scale(1.04); }
+  .doeun-thumb-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px; text-align: center; color: rgba(255,255,255,0.92); font-size: 14.5px; font-weight: 800; line-height: 1.42; }
+  .doeun-detail-lines { display: flex; flex-direction: column; }
+  .doeun-detail-line { display: flex; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid #f1f1f4; }
+  .doeun-detail-line:first-child { border-top: none; padding-top: 0; }
+  .doeun-detail-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .doeun-detail-title { font-size: 15.5px; font-weight: 700; line-height: 1.45; }
+  .doeun-detail-note { font-size: 14px; color: #8a8a95; font-weight: 600; line-height: 1.45; }
+  .doeun-award-badge { flex-shrink: 0; font-size: 13px; font-weight: 800; color: #5a5a66; background: #fff; border: 1.5px solid #dcdce4; border-radius: 100px; padding: 5px 12px; white-space: nowrap; }
+  .doeun-award-badge.is-win { color: #fff; background: var(--accent); border-color: var(--accent); }
+  .dc-award-year { display: flex; align-items: baseline; gap: 12px; margin: 16px 0 14px; }
+  .dc-award-year strong { font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .dc-award-year span { font-size: 14px; color: var(--soft); font-weight: 700; }
 
   /* ---- support ---- */
   .dc-grant-row { display: flex; align-items: center; gap: 22px; padding: 22px 6px; border-bottom: 1px solid var(--line); }
@@ -123,6 +150,51 @@
     .dc-side-info { display: none; }
     .dc-news-outlet { width: 118px; }
     .dc-main { padding-top: 36px; }
+  }
+  @media (max-width: 720px) {
+    .dc-shell { padding: 0 16px; }
+    .dc-aside { padding-top: 28px; gap: 18px; }
+    .dc-logo { width: 168px; }
+    .dc-tagline { font-size: 16px; line-height: 1.5; }
+    .dc-nav { gap: 10px 18px; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .dc-nav a { font-size: 16px; }
+    .dc-contact { font-size: 13.5px; gap: 5px; }
+    .dc-social a { width: 36px; height: 36px; }
+    .dc-main { padding: 30px 0 64px; }
+    .dc-hero { padding: 4px 0 42px; }
+    .dc-eyebrow { display: block; font-size: 12px; line-height: 1.5; letter-spacing: 1.4px; }
+    .dc-hero h1 { margin-top: 16px; font-size: 40px; letter-spacing: 0; line-height: 1.05; }
+    .dc-formula { margin-top: 20px; line-height: 1.6; }
+    .dc-lead { font-size: 16px; line-height: 1.68; }
+    .dc-badges { margin-top: 22px; gap: 8px; }
+    .dc-badge { width: 100%; justify-content: flex-start; font-size: 13.5px; padding: 9px 12px; border-radius: 8px; }
+    .dc-part { margin-top: 58px; padding-top: 22px; }
+    .dc-part-title { font-size: 27px; letter-spacing: 0; }
+    .dc-part-lead { font-size: 15.5px; line-height: 1.7; }
+    .dc-section { padding-top: 46px; }
+    .dc-sec-head { align-items: flex-start; flex-direction: column; gap: 4px; padding-bottom: 14px; margin-bottom: 14px; }
+    .dc-sec-head h2 { font-size: 30px; letter-spacing: 0; }
+    .dc-sec-sub { font-size: 13.5px; line-height: 1.45; }
+    .doeun-accordion-grid { grid-template-columns: 1fr; gap: 12px; }
+    .doeun-accordion-list { gap: 10px; }
+    .doeun-accordion-toggle { padding: 12px; gap: 12px; }
+    .doeun-tile-card .doeun-accordion-toggle { align-items: center; flex-direction: row; }
+    .doeun-tile-card .doeun-card-media { flex: 0 0 94px; width: 94px; height: 94px; aspect-ratio: auto; }
+    .doeun-tile-card .doeun-card-media.is-wide { flex-basis: 104px; width: 104px; height: 78px; }
+    .doeun-tile-card .doeun-toggle-icon { position: static; margin-left: auto; }
+    .doeun-accordion-title { font-size: 16px; }
+    .doeun-accordion-summary { font-size: 13.5px; }
+    .doeun-toggle-icon { width: 32px; height: 32px; font-size: 18px; }
+    .doeun-card-media.is-logo { flex-basis: 82px; width: 82px; height: 56px; }
+    .doeun-detail-line { align-items: flex-start; flex-direction: column; gap: 7px; }
+    .doeun-award-badge { white-space: normal; }
+    .dc-award-year { margin-top: 10px; }
+    .dc-award-year strong { font-size: 24px; }
+    .dc-cta { margin-top: 68px; padding: 28px 18px; border-radius: 8px; }
+    .dc-cta h2 { font-size: 30px; letter-spacing: 0; }
+    .dc-cta-actions { flex-direction: column; }
+    .dc-btn { width: 100%; justify-content: center; border-radius: 8px; padding: 14px 18px; }
+    .dc-footer { flex-direction: column; gap: 6px; font-size: 13.5px; }
   }
 </style>
 </helmet>
@@ -192,15 +264,7 @@
         <h2>NEWS</h2>
         <span class="dc-sec-sub">언론 보도 &amp; 수상</span>
       </header>
-      <div>
-        <sc-for list="{{ news }}" as="n" hint-placeholder-count="3">
-          <a href="{{ n.link }}" target="_blank" rel="noopener" class="dc-news-row">
-            <span class="dc-news-outlet">{{ n.outlet }}</span>
-            <h3 class="dc-news-title">{{ n.title }}</h3>
-            <span class="dc-news-arrow">↗</span>
-          </a>
-        </sc-for>
-      </div>
+      {{ newsList }}
     </section>
 
     <section id="works" class="dc-section">
@@ -254,21 +318,7 @@
         <h2>SUPPORT</h2>
         <span class="dc-sec-sub">지원사업 선정 실적</span>
       </header>
-      <div>
-        <sc-for list="{{ grants }}" as="g" hint-placeholder-count="4">
-          <div class="dc-grant-row">
-            <span class="dc-grant-year">{{ g.year }}</span>
-            <div class="dc-grant-logo">
-              <img src="{{ g.logo }}" alt="{{ g.org }}" loading="lazy">
-            </div>
-            <div class="dc-grant-body">
-              <h3>{{ g.org }}</h3>
-              <span>{{ g.program }}</span>
-            </div>
-            <span class="dc-grant-tag">선정</span>
-          </div>
-        </sc-for>
-      </div>
+      {{ grantsList }}
     </section>
 
     <section class="dc-cta">
@@ -292,12 +342,42 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 1024}, &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#5460E1&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#5460E1&quot;, &quot;#111827&quot;, &quot;#E1544F&quot;, &quot;#1F8A5B&quot;], &quot;section&quot;: &quot;테마&quot;}, &quot;showEducation&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;섹션&quot;}}">
 class Component extends DCLogic {
-  state = { modalId: null, selectedTags: [] };
+  state = { modalId: null, selectedTags: [], openItems: {} };
 
   renderVals() {
     const accent = this.props.accentColor || "#5460E1";
     const showEducation = this.props.showEducation !== false;
     const h = React.createElement;
+    const openItems = this.state.openItems || {};
+    const isOpen = (key) => !!openItems[key];
+    const toggleItem = (key) => {
+      const next = Object.assign({}, this.state.openItems || {});
+      next[key] = !next[key];
+      this.setState({ openItems: next });
+    };
+    const accordionClass = (key, extra) => "doeun-accordion-card" + (extra ? " " + extra : "") + (isOpen(key) ? " is-open" : "");
+    const toggleIcon = (open) => h("span", { className: "doeun-toggle-icon", "aria-hidden": "true" }, open ? "−" : "+");
+    const panel = (key, children) => isOpen(key) ? h("div", { id: "panel-" + key, className: "doeun-accordion-panel" }, children) : null;
+    const fallbackThumb = (title, hidden) => h("span", { className: "doeun-thumb-fallback", "aria-hidden": hidden ? "true" : null }, title);
+    const mediaThumb = (src, title, className, style) => h("span", { className: "doeun-card-media" + (className ? " " + className : ""), style: style || null },
+      fallbackThumb(title, !!src),
+      src ? h("img", { src: src, alt: "", "aria-hidden": "true", loading: "lazy", referrerPolicy: "no-referrer", onError: (e) => { e.currentTarget.style.display = "none"; } }) : null
+    );
+    const accordionHeader = (key, metaText, title, summary, media, extraClass) => h("button", {
+      type: "button",
+      className: "doeun-accordion-toggle" + (extraClass ? " " + extraClass : ""),
+      onClick: () => toggleItem(key),
+      "aria-expanded": isOpen(key),
+      "aria-controls": "panel-" + key
+    },
+      media || null,
+      h("span", { className: "doeun-accordion-copy" },
+        metaText ? h("span", { className: "doeun-accordion-meta" }, metaText) : null,
+        h("span", { className: "doeun-accordion-title" }, title),
+        summary ? h("span", { className: "doeun-accordion-summary" }, summary) : null
+      ),
+      toggleIcon(isOpen(key))
+    );
 
     const links = {
       "1":  {"blog":"https://blog.naver.com/roadofsmile/224173037307","insta":"https://www.instagram.com/reel/DUAlLPxEWg-/","youtube":"","notion":"https://app.notion.com/p/344a6d3ca51d8106b075c4d4bcf49d0f"},
@@ -406,20 +486,23 @@ class Component extends DCLogic {
       return { id: n, img: workThumbs[String(n)] || ("assets/thumbs/" + n + ".jpg"), title: titles[n][0], sub: titles[n][1], links: ls, linkCount: ls.length || 0, open: () => this.setState({ modalId: n }) };
     });
 
-    // WORKS 갤러리 — createElement로 렌더해 로컬/URL 썸네일을 모두 지원하고, 로딩 실패 시
-    // 그라데이션+제목 카드로 폴백합니다. referrerPolicy=no-referrer로 네이버 핫링크 차단을 회피합니다.
-    const worksGrid = h("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(238px, 1fr))", gap: "clamp(20px, 2.2vw, 34px) clamp(16px, 1.6vw, 26px)" } },
-      projects.map((p) => h("button", { key: p.id, type: "button", onClick: p.open, className: "doeun-work-card", style: { textAlign: "left", border: "none", background: "none", padding: 0, cursor: "pointer", font: "inherit", color: "inherit", display: "flex", flexDirection: "column", gap: "13px" } },
-        h("div", { className: "doeun-work-thumb", style: { position: "relative", aspectRatio: "1 / 1", overflow: "hidden", borderRadius: "6px", background: "linear-gradient(150deg, " + accent + ", #14141a)" } },
-          h("div", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", textAlign: "center", color: "rgba(255,255,255,0.92)", fontSize: "14.5px", fontWeight: 700, lineHeight: 1.4, letterSpacing: "-0.3px" } }, p.title),
-          h("img", { src: p.img, alt: p.title, loading: "lazy", referrerPolicy: "no-referrer", style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }, onError: (e) => { e.currentTarget.style.display = "none"; } })
-        ),
-        h("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } },
-          h("h3", { style: { margin: 0, fontSize: "17px", fontWeight: 700, letterSpacing: "-0.4px", lineHeight: 1.35 } }, p.title),
-          h("p", { style: { margin: 0, fontSize: "14.5px", color: "#8a8a95", lineHeight: 1.45 } }, p.sub)
+    const workCard = (p) => {
+      const key = "work-" + p.id;
+      const links = p.links.slice(0, 3);
+      return h("article", { key: key, className: accordionClass(key, "doeun-tile-card") },
+        accordionHeader(key, p.sub, p.title, p.linkCount ? "관련 링크 " + p.linkCount + "건" : "프로젝트 자료 준비 중", mediaThumb(p.img, p.title, "doeun-work-thumb")),
+        panel(key,
+          h("div", null,
+            h("p", { className: "doeun-panel-text" }, "대표 이미지와 관련 게시물을 함께 확인할 수 있습니다."),
+            h("div", { className: "doeun-action-row" },
+              h("button", { type: "button", className: "doeun-action-pill is-primary", onClick: p.open }, "관련 링크 보기"),
+              links.map((l, i) => h("a", { key: i, href: l.url, target: "_blank", rel: "noopener", className: "doeun-action-pill" }, l.label))
+            )
+          )
         )
-      ))
-    );
+      );
+    };
+    const worksGrid = h("div", { className: "doeun-accordion-grid" }, projects.map((p) => workCard(p)));
 
     // Modal rendered via createElement so it only exists when open (no literal-hole img on first paint)
     let modalEl = null;
@@ -458,6 +541,30 @@ class Component extends DCLogic {
       { year: "2025", org: "SPP 국제콘텐츠마켓", program: "진출기업 선정", logo: "assets/logos/sba.png" },
       { year: "2025", org: "성남문화재단", program: "청년예술활동지원 선정", logo: "assets/logos/scf.png" }
     ];
+    const grantCard = (g, i) => {
+      const key = "grant-" + i;
+      return h("article", { key: key, className: accordionClass(key) },
+        accordionHeader(key, g.year, g.org, g.program, mediaThumb(g.logo, g.org, "is-logo")),
+        panel(key,
+          h("div", { className: "doeun-detail-lines" },
+            h("div", { className: "doeun-detail-line" },
+              h("div", { className: "doeun-detail-body" },
+                h("span", { className: "doeun-detail-title" }, "선정 연도"),
+                h("span", { className: "doeun-detail-note" }, g.year)
+              ),
+              h("span", { className: "doeun-award-badge is-win" }, "선정")
+            ),
+            h("div", { className: "doeun-detail-line" },
+              h("div", { className: "doeun-detail-body" },
+                h("span", { className: "doeun-detail-title" }, g.program),
+                h("span", { className: "doeun-detail-note" }, g.org)
+              )
+            )
+          )
+        )
+      );
+    };
+    const grantsList = h("div", { className: "doeun-accordion-list" }, grants.map((g, i) => grantCard(g, i)));
 
     // AWARDS — Notion 'Kim Na Yeong' 프로필의 '작품 수상 및 선정' 기준 (연도별)
     const awardsData = [
@@ -511,28 +618,28 @@ class Component extends DCLogic {
       ] }
     ];
     const awardWin = (t) => t === "Winner" || t === "수상";
-    const awardBadge = (t) => awardWin(t)
-      ? { flexShrink: 0, fontSize: "13px", fontWeight: 700, letterSpacing: "0.3px", color: "#fff", background: accent, borderRadius: "100px", padding: "6px 13px", whiteSpace: "nowrap" }
-      : { flexShrink: 0, fontSize: "13px", fontWeight: 700, letterSpacing: "0.3px", color: "#5a5a66", background: "#fff", border: "1.5px solid #dcdce4", borderRadius: "100px", padding: "5px 12px", whiteSpace: "nowrap" };
-    const awardLineEl = (l, i) => h("div", { key: i, style: { display: "flex", alignItems: "center", gap: "14px", padding: "11px 0", borderTop: i === 0 ? "none" : "1px solid #f1f1f4" } },
-      h("div", { style: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "3px" } },
-        h("span", { style: { fontSize: "15.5px", fontWeight: 600, letterSpacing: "-0.3px", lineHeight: 1.4 } }, l.org),
-        l.note ? h("span", { style: { fontSize: "14px", color: "#9a9aa4", fontWeight: 600, lineHeight: 1.45 } }, l.note) : null
+    const awardLineEl = (l, i) => h("div", { key: i, className: "doeun-detail-line" },
+      h("div", { className: "doeun-detail-body" },
+        h("span", { className: "doeun-detail-title" }, l.org),
+        l.note ? h("span", { className: "doeun-detail-note" }, l.note) : null
       ),
-      l.tag ? h("span", { style: awardBadge(l.tag) }, l.tag) : null
+      l.tag ? h("span", { className: "doeun-award-badge" + (awardWin(l.tag) ? " is-win" : "") }, l.tag) : null
     );
-    const awardWorkEl = (w, i) => h("div", { key: i, style: { padding: "20px 22px 12px", border: "1.5px solid #ededf1", borderRadius: "12px", background: "#fff" } },
-      h("h3", { style: { margin: "0 0 4px", fontSize: "17.5px", fontWeight: 800, letterSpacing: "-0.5px", lineHeight: 1.4 } }, w.title),
-      h("div", null, w.lines.map((l, j) => awardLineEl(l, j)))
-    );
-    const awardsList = h("div", { style: { display: "flex", flexDirection: "column", gap: "26px" } },
+    const awardWorkEl = (w, i, year) => {
+      const key = "award-" + year + "-" + i;
+      return h("article", { key: key, className: accordionClass(key) },
+        accordionHeader(key, year, w.title, w.lines.length + "개 수상 및 선정 이력", null),
+        panel(key, h("div", { className: "doeun-detail-lines" }, w.lines.map((l, j) => awardLineEl(l, j))))
+      );
+    };
+    const awardsList = h("div", { className: "doeun-accordion-list" },
       awardsData.map((grp, gi) => h("div", { key: gi },
-        h("div", { style: { display: "flex", alignItems: "baseline", gap: "12px", margin: "16px 0 14px" } },
-          h("span", { style: { fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 800, letterSpacing: "-1px", color: accent } }, grp.year),
-          h("span", { style: { fontSize: "14px", color: "#9a9aa4", fontWeight: 600 } }, grp.works.length + " works")
+        h("div", { className: "dc-award-year" },
+          h("strong", null, grp.year),
+          h("span", null, grp.works.length + " works")
         ),
-        h("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "16px" } },
-          grp.works.map((w, wi) => awardWorkEl(w, wi))
+        h("div", { className: "doeun-accordion-grid" },
+          grp.works.map((w, wi) => awardWorkEl(w, wi, grp.year))
         )
       ))
     );
@@ -603,18 +710,22 @@ class Component extends DCLogic {
     // CLASS 갤러리 — WORKS와 동일한 카드 스타일. createElement로 렌더해 썸네일 유무에 따라
     // 이미지(있을 때) 또는 태그색 그라데이션+제목(없을 때)을 보여줍니다.
     const tagColor = { "AI": "#E1544F", "Puppet Theater": "#7A6CF0", "Storytelling": "#1F8A5B", "MiriCanvas": "#2BB0C4", "Canva": "#00C4CC", "Gemini": "#B06A2E" };
-    const classCard = (c, i) => h("a", { key: c.slotId || i, href: c.link, target: "_blank", rel: "noopener", className: "doeun-class-card", style: { display: "flex", flexDirection: "column", gap: "13px", textDecoration: "none", color: "inherit" } },
-      h("div", { className: "doeun-class-thumb", style: { position: "relative", aspectRatio: "4 / 3", overflow: "hidden", borderRadius: "6px", background: "#ffffff", border: "1px solid #ececf1" } },
-        c.thumb
-          ? h("img", { key: "img", src: c.thumb, alt: c.title, loading: "lazy", referrerPolicy: "no-referrer", className: "doeun-class-thumb-img", style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", display: "block" }, onError: (e) => { e.currentTarget.style.display = "none"; } })
-          : h("div", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "18px", textAlign: "center", background: "linear-gradient(150deg, " + (tagColor[c.tags[0]] || accent) + ", #14141a)", color: "rgba(255,255,255,0.92)", fontSize: "15px", fontWeight: 700, lineHeight: 1.45, letterSpacing: "-0.3px" } }, c.title)
-      ),
-      h("div", { style: { display: "flex", flexDirection: "column", gap: "6px" } },
-        h("span", { style: { fontSize: "13px", fontWeight: 700, letterSpacing: "0.4px", color: accent } }, c.tagLabels),
-        h("h3", { style: { margin: 0, fontSize: "16.5px", fontWeight: 700, letterSpacing: "-0.4px", lineHeight: 1.42 } }, c.title)
-      )
-    );
-    const classGrid = h("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(258px, 1fr))", gap: "clamp(20px, 2.2vw, 32px) clamp(16px, 1.6vw, 26px)" } },
+    const classCard = (c, i) => {
+      const key = c.slotId || ("class-" + i);
+      const classMediaStyle = c.thumb ? { background: "#fff", border: "1px solid #ececf1" } : { background: "linear-gradient(150deg, " + (tagColor[c.tags[0]] || accent) + ", #14141a)" };
+      return h("article", { key: key, className: accordionClass(key, "doeun-tile-card") },
+        accordionHeader(key, c.tagLabels, c.title, "수업 소개 보기", mediaThumb(c.thumb, c.title, "doeun-class-thumb is-wide", classMediaStyle)),
+        panel(key,
+          h("div", null,
+            h("p", { className: "doeun-panel-text" }, "수업 태그: " + c.tagLabels),
+            h("div", { className: "doeun-action-row" },
+              h("a", { href: c.link, target: "_blank", rel: "noopener", className: "doeun-action-pill is-primary" }, "수업 글 보기")
+            )
+          )
+        )
+      );
+    };
+    const classGrid = h("div", { className: "doeun-accordion-grid" },
       filteredClasses.map((c, i) => classCard(c, i))
     );
 
@@ -623,9 +734,24 @@ class Component extends DCLogic {
       { outlet: "중앙일보", title: "설화 뮤지컬 애니 ‘아기장수 우투리: Re-Bloom’ 뉴욕국제영화제 3관왕", link: "https://www.joongang.co.kr/article/25429660" },
       { outlet: "New York International Film Awards", title: "VIP Interview with Na-yeong Kim, director of ‘Baby Hero Uturi: Re-Bloom’", link: "https://newyorkinternationalfilmawards.com/na-yeong-kim/" }
     ];
+    const newsCard = (n, i) => {
+      const key = "news-" + i;
+      return h("article", { key: key, className: accordionClass(key) },
+        accordionHeader(key, n.outlet, n.title, "보도 자료 확인", null),
+        panel(key,
+          h("div", null,
+            h("p", { className: "doeun-panel-text" }, n.outlet + "에 게재된 도은컴퍼니 관련 기사입니다."),
+            h("div", { className: "doeun-action-row" },
+              h("a", { href: n.link, target: "_blank", rel: "noopener", className: "doeun-action-pill is-primary" }, "기사 보기 ↗")
+            )
+          )
+        )
+      );
+    };
+    const newsList = h("div", { className: "doeun-accordion-list" }, news.map((n, i) => newsCard(n, i)));
 
     return {
-      accent, showEducation, grants, awardsList, tagDeck, classGrid, classCount, news, worksGrid, count: projects.length,
+      accent, showEducation, grants, grantsList, awardsList, tagDeck, classGrid, classCount, news, newsList, worksGrid, count: projects.length,
       modalEl
     };
   }
