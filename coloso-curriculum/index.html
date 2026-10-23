@@ -320,11 +320,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
 .site{overflow-x:clip}
 .hero-glow{width:620px;height:620px;right:-60px;top:-120px;background:radial-gradient(circle,rgba(255,178,0,.22),rgba(255,122,0,.08) 40%,transparent 68%)}
 .hero-content{max-width:700px}
-.hero-logo{height:34px;margin-bottom:22px}
+.hero-logo{height:30px;margin-bottom:16px}
 .hero-eyebrow{color:var(--label);background:var(--glass);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);box-shadow:var(--glass-shadow)}
-.hero h1{font-size:clamp(44px,min(4.8vw,7.4vh),78px);line-height:1.14;letter-spacing:-.045em;margin:22px 0 20px;color:var(--label);font-weight:800;text-shadow:0 1px 0 color-mix(in srgb,var(--bg) 60%,transparent)}
+.hero h1{font-size:clamp(44px,min(4.8vw,7.4vh),78px);line-height:1.14;letter-spacing:-.045em;margin:18px 0 16px;color:var(--label);font-weight:800;text-shadow:0 1px 0 color-mix(in srgb,var(--bg) 60%,transparent)}
 .hero h1 .hl{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--coloso) 72%,transparent) 64%,color-mix(in srgb,var(--coloso) 72%,transparent) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:0 .04em}
-.hero-lede{max-width:640px;font-size:clamp(18px,1.5vw,21px);color:var(--label-2);text-shadow:var(--glass-text-glow)}
+.hero-lede{max-width:640px;font-size:clamp(17px,1.3vw,19px);color:var(--label-2);text-shadow:var(--glass-text-glow)}
+.hero-steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:7px;max-width:660px}
+.hero-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:start;font-size:clamp(15.5px,1.15vw,17px);line-height:1.58;color:var(--label-2);text-shadow:var(--glass-text-glow)}
+.hero-steps li:nth-child(1){--tint:var(--blue)}.hero-steps li:nth-child(2){--tint:var(--purple)}.hero-steps li:nth-child(3){--tint:var(--orange)}
+.hero-steps b{margin-top:.08em;padding:2px 11px;border-radius:999px;font-size:.84em;font-weight:800;letter-spacing:.02em;text-shadow:none;color:color-mix(in srgb,var(--tint) 72%,var(--ink-mix));background:color-mix(in srgb,var(--tint) 15%,var(--glass));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tint) 24%,transparent)}
 .hero-author{font-size:15.5px;color:var(--label-3);text-shadow:var(--glass-text-glow)}
 .hero-orbit{border-color:color-mix(in srgb,var(--label) 14%,transparent)}
 
@@ -333,7 +337,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
 @media(min-width:1101px){
  .hero{display:grid;grid-template-columns:minmax(0,1fr) clamp(384px,46%,564px);column-gap:clamp(20px,2.4vw,44px);align-content:center}
  .hero-content{grid-column:1;grid-row:1;max-width:none}
- .hero h1{font-size:clamp(40px,min(3.9vw,7vh),72px)}
+ .hero h1{font-size:clamp(38px,min(3.7vw,6.4vh),68px)}
  .hero-illustration{grid-column:2;grid-row:1;align-self:center;width:100%;margin:0}
  .hero-stats,.hero-scroll{grid-column:1/-1}
 }
@@ -374,7 +378,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
 .hero-spark{position:absolute;width:16px;height:16px;opacity:.9;background:var(--coloso);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);animation:hero-twinkle 3.2s ease-in-out infinite}
 .spark-one{top:0;right:12%}.spark-two{left:2%;bottom:16%;width:11px;height:11px;animation-delay:1.4s}
 @keyframes hero-twinkle{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:.95;transform:scale(1) rotate(45deg)}}
-.hero-stats{margin-top:clamp(28px,4vh,52px)}
+.hero-stats{margin-top:clamp(22px,3vh,44px)}
 .hero-stat{color:var(--label);background:var(--glass);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);box-shadow:var(--glass-shadow)}
 .hero-stat::after{--glass-edge-1:rgba(255,255,255,.9);--glass-edge-2:rgba(255,255,255,.14)}
 .hero-stat strong span{color:var(--label-3)}.hero-stat small{color:var(--label-3)}
@@ -471,7 +475,8 @@ window.addEventListener('load',function(){window.scrollTo(0,0);});
     <img class="logo-light hero-logo" src="assets/coloso-wordmark-dark-text.png" alt="Coloso" width="552" height="132"><img class="logo-dark hero-logo" src="assets/coloso-wordmark-white-text.png" alt="Coloso" width="552" height="132">
     <span class="hero-eyebrow"><span class="eyebrow-dot"></span> COLOSO · 25강 상세 커리큘럼</span>
     <h1 id="hero-title">원작에서 <span class="hl">영상 IP</span>까지, AI 애니메이션 제작 마스터클래스</h1>
-    <p class="hero-lede"><span class="s"><span class="c">원전 소설·창작 서사를 16:9 AI 애니메이션으로 완성하고,</span> <span class="c"><img class="tool-logo" src="assets/logos/capcut.png" alt="" width="48" height="48">CapCut으로 숏폼·예고편·<img class="tool-logo" src="assets/logos/suno.png" alt="" width="48" height="48">SUNO 뮤직비디오까지 확장한다.</span></span> <span class="s">글로벌 진출 심화에서는 해외 유튜브·현지화·영화제 출품을 다룬다.</span></p>
+    <p class="hero-lede"><span class="s">원전 소설 · 창작 서사를 AI 애니메이션으로 완성하고,<br>숏폼·예고편·뮤직비디오까지 확장한다.</span> <span class="s">해외 유튜브 · 현지화 · 영화제 출품까지<br>글로벌 진출을 희망하는 AI 애니메이션 창작자를 위한 클래스.</span></p>
+    <ul class="hero-steps"><li><b>기획</b><span><img class="tool-logo" src="assets/logos/chatgpt.png" alt="" width="48" height="48">ChatGPT·<img class="tool-logo" src="assets/logos/claude.png" alt="" width="48" height="48">Claude 스킬로 원작을 분석·각색하고 콘티까지 설계한다.</span></li><li><b>제작</b><span><img class="tool-logo" src="assets/logos/higgsfield.png" alt="" width="48" height="48">Higgsfield로 캐릭터와 장면을 만들어 애니메이션 본편을 완성한다.</span></li><li><b>확장</b><span><span class="s"><span class="c"><img class="tool-logo" src="assets/logos/capcut.png" alt="" width="48" height="48">CapCut·<img class="tool-logo" src="assets/logos/suno.png" alt="" width="48" height="48">SUNO로 숏폼·예고편·뮤직비디오를 만들고,</span> <span class="c">현지화를 거쳐 해외 유튜브·영화제로 내보낸다.</span></span></span></li></ul>
     <div class="hero-author">도은컴퍼니 김나영 대표·감독 | 2026. 10. 21. | 콜로소 제출용</div>
   </div>
   <div class="hero-illustration" aria-hidden="true">
@@ -828,7 +833,7 @@ window.addEventListener('DOMContentLoaded',function(){
   intro.from('.hero',{y:28,opacity:0,scale:.985,duration:1})
    .from('.hero-logo,.hero-eyebrow',{y:16,opacity:0,stagger:.08},'-=.6')
    .from('.hero h1',{y:30,opacity:0},'-=.65')
-   .from('.hero-lede,.hero-author',{y:18,opacity:0,stagger:.08},'-=.65')
+   .from('.hero-lede,.hero-steps li,.hero-author',{y:18,opacity:0,stagger:.08},'-=.65')
    .from('.hero-illustration .film-frame',{y:48,opacity:0,stagger:.14,duration:1.1},'-=1')
    .addLabel('stats','-=.7')
    .from('.hero-stat',{y:26,opacity:0,stagger:.08},'stats');
